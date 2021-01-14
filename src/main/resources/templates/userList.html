@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Thymeleaf users</title>
+</head>
+<body>
+	<table border="1">
+		<tr th:each=" u :  ${list}">
+			<td th:text="${u.id}"></td>
+			<td th:text="${u.name}"></td>
+			<td th:text="${u.age}"></td>
+			<td>
+				<a th:href="@{/users/findUserById(id = ${u.id})}"> update user</a>
+			</td>
+		</tr>
+	</table>
+</body>
+</html>
