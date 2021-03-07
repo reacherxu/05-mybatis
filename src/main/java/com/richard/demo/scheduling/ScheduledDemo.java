@@ -17,12 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduledDemo {
 
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 1 * * * ?")
     public void scheduledMethod() {
         log.info(String.format("method A-----, date is %tc, thread id is %s " , new Date(),Thread.currentThread().getId()));
     }
 
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 1 * * * ?")
     public void scheduledMethod2() {
         log.info(String.format("method B-----, date is %tc, thread id is %s " , new Date(),Thread.currentThread().getId()));
     }

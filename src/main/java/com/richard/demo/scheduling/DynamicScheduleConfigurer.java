@@ -9,6 +9,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.util.StringUtils;
 
 import com.richard.demo.dao.CronMapper;
+import com.richard.demo.enums.SchedulerType;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +32,7 @@ public class DynamicScheduleConfigurer implements SchedulingConfigurer {
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.addTriggerTask(
                 // 1.添加任务内容(Runnable)
-                new VisitTask(),
+                new VisitTask(Thread.currentThread().getName(), SchedulerType.InterfaceBased),
                 // 2.设置执行周期(Trigger)
                 triggerContext -> {
                     // 2.1 从数据库获取执行周期
