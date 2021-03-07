@@ -63,6 +63,13 @@ public class UserController {
         return list;
     }
 
+    @RequestMapping("/findCron")
+    @ResponseBody
+    public List<User> findAllCron() {
+        List<User> list = userService.findAll();
+        return list;
+    }
+
     @RequestMapping("/findUserById")
     public String findUserById(Integer id, Model model) {
         User user = userService.findUserById(id);
