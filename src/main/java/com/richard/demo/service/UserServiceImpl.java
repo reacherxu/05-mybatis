@@ -5,11 +5,13 @@
 package com.richard.demo.service;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.richard.demo.mapper.UserMapper;
-import com.richard.demo.pojo.User;
+
+import com.richard.demo.dao.UserMapper;
+import com.richard.demo.entity.User;
 
 /**
  *
@@ -23,8 +25,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    /** 
-     * @see com.richard.demo.service.UserService#addUser(com.richard.demo.pojo.User)
+    /**
+     * @see com.richard.demo.service.UserService#addUser(com.richard.demo.entity.User)
      */
     @Override
     public void addUser(User user) {
@@ -48,7 +50,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * @see com.richard.demo.service.UserService#updateUser(java.lang.Integer)
+     * 
+     * @param user
      */
     @Override
     public void updateUser(User user) {

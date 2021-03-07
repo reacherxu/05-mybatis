@@ -2,7 +2,7 @@
  * SAP Inc.
  * Copyright (c) 1972-2020 All Rights Reserved.
  */
-package com.richard.demo.pojo;
+package com.richard.demo.entity;
 
 import lombok.Data;
 

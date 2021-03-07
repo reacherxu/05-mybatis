@@ -5,7 +5,8 @@
 package com.richard.demo.service;
 
 import java.util.List;
-import com.richard.demo.pojo.User;
+
+import com.richard.demo.entity.User;
 
 /**
  *

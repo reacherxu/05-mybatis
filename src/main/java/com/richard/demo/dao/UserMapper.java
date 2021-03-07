@@ -2,10 +2,11 @@
  * SAP Inc.
  * Copyright (c) 1972-2020 All Rights Reserved.
  */
-package com.richard.demo.mapper;
+package com.richard.demo.dao;
 
 import java.util.List;
-import com.richard.demo.pojo.User;
+
+import com.richard.demo.entity.User;
 
 /**
  *
