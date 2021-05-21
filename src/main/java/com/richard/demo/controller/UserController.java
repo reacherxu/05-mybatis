@@ -6,6 +6,8 @@ package com.richard.demo.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,7 +46,7 @@ public class UserController {
 
     @RequestMapping(value = "/addUser1", method = RequestMethod.POST)
     @ResponseBody
-    public String addUser1(@RequestBody User user) {
+    public String addUser1(@RequestBody @Valid User user) {
         userService.addUser(user);
         return "ok";
     }

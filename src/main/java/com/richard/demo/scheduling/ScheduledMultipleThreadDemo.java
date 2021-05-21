@@ -20,7 +20,7 @@ public class ScheduledMultipleThreadDemo {
     private static final ExecutorService executor = Executors.newFixedThreadPool(5);
 
 
-    @Scheduled(cron = "0/2 * * * * ?")
+    @Scheduled(cron = "0/20 5 * * * ?")
     public void mtDemo() {
         try {
             log.info("Submit polling thread ");
