@@ -24,6 +24,8 @@ public interface UserMapper {
 
     User findUserById(Integer id);
 
+    User findUserByName(String name);
+
     void updateUser(User user);
 
 }

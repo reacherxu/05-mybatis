@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.richard.demo.dao.UserMapper">
 
 	<insert id="insertUser" parameterType="com.richard.demo.entity.User">
@@ -14,6 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-ma
 
 	<select id="findUserById" resultType="com.richard.demo.entity.User">
 			select id,name,age from users where id = #{id}
+	</select>
+
+	<select id="findUserByName" resultType="com.richard.demo.entity.User">
+			select id,name,age from users where name = #{name}
 	</select>
 
 	<update id="updateUser" parameterType="com.richard.demo.entity.User">

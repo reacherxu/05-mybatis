@@ -4,6 +4,7 @@
  */
 package com.richard.demo.service;
 
+import java.util.Date;
 import java.util.List;
 
 import com.richard.demo.entity.User;
@@ -16,6 +17,17 @@ import com.richard.demo.entity.User;
 public interface UserService {
 
     void addUser(User user);
+
+    // test roll back
+    void addUserWithExceptionRollback(User user);
+
+    void addUserWithExceptionNoRollback(User user);
+
+    // test event listener
+    User addUserAyncEvent(User user);
+
+    void sendDate(Date date);
+
 
     List<User> findAll();
 

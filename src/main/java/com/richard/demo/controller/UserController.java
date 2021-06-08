@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.richard.demo.dao.UserMapper;
 import com.richard.demo.entity.User;
 import com.richard.demo.service.UserService;
 
@@ -32,6 +33,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     // visit template folder page
     @RequestMapping("/{page}")
     public String showPage(@PathVariable String page) {
@@ -44,10 +48,35 @@ public class UserController {
         return "ok";
     }
 
+    /**
+     * Transactional noRollbackFor function
+     * 
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "/addUser1", method = RequestMethod.POST)
     @ResponseBody
-    public String addUser1(@RequestBody @Valid User user) {
-        userService.addUser(user);
+    public User addUser1(@RequestBody @Valid User user) {
+        userService.addUserWithExceptionNoRollback(user);
+        return userMapper.findUserByName(user.getName());
+    }
+
+    /**
+     * use async method to add user
+     * 
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/addUser3", method = RequestMethod.POST)
+    @ResponseBody
+    public User addUser3(@RequestBody @Valid User user) {
+
+        return userService.addUserAyncEvent(user);
+    }
+
+    @RequestMapping(value = "/addUser2", method = RequestMethod.POST)
+    @ResponseBody
+    public String addUser2() {
         return "ok";
     }
 
