@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Spring的发布订阅模型实际上并不是异步的，而是同步的来将代码进行解耦。
-     * 如果需要起异步线程，类上要加注解 @EnableAsync
+     * 如果需要起异步线程，类上要加注解 @EnableAsync, 也不会影响上一个transaction
      * 
      * @param event
      */
