@@ -26,6 +26,9 @@ public interface UserService {
     // test event listener
     User addUserAyncEvent(User user);
 
+    // test event listener without transaction
+    User addUserWithoutTransaction(User user);
+
     void sendDate(Date date);
 
 

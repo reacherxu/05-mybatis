@@ -79,13 +79,28 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 值得注意的是，如果发射事件的地方没有事务，这里需要在注解中加一个参数：fallbackExecution = true
+     * 
+     * @param user
+     * @return
+     */
+    @Override
+    public User addUserWithoutTransaction(User user) {
+        userMapper.insertUser(user);
+        log.info("no transaction, processing transaction..........Thread number is {} ", Thread.currentThread().getId());
+        User foundUser = userMapper.findUserByName(user.getName());
+        eventPublisher.publishEvent(new UserRegisterEvent(this, new Date(), user));
+        return foundUser;
+    }
+
+    /**
      * Spring的发布订阅模型实际上并不是异步的，而是同步的来将代码进行解耦。
      * 如果需要起异步线程，类上要加注解 @EnableAsync, 也不会影响上一个transaction
      * 
      * @param event
      */
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
     public void onUserRegisterAfterCommit(UserRegisterEvent event) {
         try {
             Thread.sleep(5 * 1000);

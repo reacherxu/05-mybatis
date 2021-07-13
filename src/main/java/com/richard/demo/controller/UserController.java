@@ -74,6 +74,19 @@ public class UserController {
         return userService.addUserAyncEvent(user);
     }
 
+    /**
+     * use async method to add user
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/addUser4", method = RequestMethod.POST)
+    @ResponseBody
+    public User addUser4(@RequestBody @Valid User user) {
+
+        return userService.addUserWithoutTransaction(user);
+    }
+
     @RequestMapping(value = "/addUser2", method = RequestMethod.POST)
     @ResponseBody
     public String addUser2() {
