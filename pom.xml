@@ -15,9 +15,156 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<maven-jar-plugin.version>3.0.0</maven-jar-plugin.version>
+		<delight.nashorn.sandbox.version>0.1.14</delight.nashorn.sandbox.version>
+		<powermock.version>2.0.2</powermock.version>
+		<mockito.version>2.23.4</mockito.version>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.2</version>
+		</dependency>
+		<!-- power mock -->
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>${powermock.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.mockito</groupId>
+					<artifactId>mockito-core</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>test</scope>
+		</dependency>
+		<!--  mockito -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<!--		AST 依赖-->
+		<dependency>
+			<groupId>io.github.laplacedemon</groupId>
+			<artifactId>light-expr</artifactId>
+			<version>0.1.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.javaparser</groupId>
+			<artifactId>javaparser-core</artifactId>
+			<version>3.6.5</version>
+		</dependency>
+		<!--		切面依赖-->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.6</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+		</dependency>
+		<!--		Google Guava 工具类库-->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>30.1.1-jre</version>
+		</dependency>
+		<!--		common-beanutils 操作对象-->
+		<dependency>
+			<groupId>commons-beanutils</groupId>
+			<artifactId>commons-beanutils</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>1.10.19</version>
+			<scope>test</scope>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.72</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javadelight</groupId>
+			<artifactId>delight-nashorn-sandbox</artifactId>
+			<version>${delight.nashorn.sandbox.version}</version>
+		</dependency>
+		<!-- Actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+			CollectionUtils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-collections4</artifactId>
+			<version>4.3</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+			StringUtils -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<!-- rx java -->
+		<dependency>
+			<groupId>io.reactivex</groupId>
+			<artifactId>rxjava</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<!-- xpath -->
+		<dependency>
+			<groupId>jaxen</groupId>
+			<artifactId>jaxen</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.plugin</groupId>
+			<artifactId>spring-plugin-core</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.plugin</groupId>
+			<artifactId>spring-plugin-metadata</artifactId>
+			<version>2.0.0.RELEASE</version>
+		</dependency>
 		<!-- mysql 数据库驱动 -->
 		<dependency>
 			<groupId>mysql</groupId>
@@ -55,6 +202,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>RELEASE</version>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 

@@ -4,11 +4,15 @@
  */
 package com.richard.demo.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +23,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.richard.demo.dao.UserMapper;
+import com.richard.demo.dto.PairDto;
 import com.richard.demo.entity.User;
 import com.richard.demo.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
@@ -29,12 +36,16 @@ import com.richard.demo.service.UserService;
  */
 @RequestMapping("/users")
 @Controller
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     // visit template folder page
     @RequestMapping("/{page}")
@@ -85,6 +96,23 @@ public class UserController {
     public User addUser4(@RequestBody @Valid User user) {
 
         return userService.addUserWithoutTransaction(user);
+    }
+
+    @RequestMapping(value = "/addUser5", method = RequestMethod.POST)
+    @ResponseBody
+    public Resource addUser5() throws IOException {
+        Resource resource = userService.fileDeletion();
+        log.info("resource received...");
+
+        return resource;
+    }
+
+    @RequestMapping(value = "/addUser6", method = RequestMethod.POST)
+    @ResponseBody
+    public void addUser6(@RequestBody PairDto pairs) throws IOException {
+        ImmutablePair<String, String> pair = pairs.getPairs().get(0);
+        log.info("resource received...{} : {}", pair.getLeft(), pair.getRight());
+
     }
 
     @RequestMapping(value = "/addUser2", method = RequestMethod.POST)

@@ -7,6 +7,8 @@ package com.richard.demo.service;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.core.io.Resource;
+
 import com.richard.demo.entity.User;
 
 /**
@@ -28,6 +30,8 @@ public interface UserService {
 
     // test event listener without transaction
     User addUserWithoutTransaction(User user);
+
+    Resource fileDeletion();
 
     void sendDate(Date date);
 
