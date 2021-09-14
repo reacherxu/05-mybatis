@@ -107,6 +107,19 @@ public class UserController {
         return resource;
     }
 
+    /**
+     * test event listener
+     * 
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/addUser7", method = RequestMethod.POST)
+    @ResponseBody
+    public void addUser7() throws IOException {
+        userService.eventListener();
+        log.info("resource received...");
+    }
+
     @RequestMapping(value = "/addUser6", method = RequestMethod.POST)
     @ResponseBody
     public void addUser6(@RequestBody PairDto pairs) throws IOException {

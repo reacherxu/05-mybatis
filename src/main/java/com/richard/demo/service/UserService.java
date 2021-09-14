@@ -33,6 +33,8 @@ public interface UserService {
 
     Resource fileDeletion();
 
+    void eventListener();
+
     void sendDate(Date date);
 
 

@@ -11,7 +11,10 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
@@ -26,6 +29,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.richard.demo.dao.UserMapper;
 import com.richard.demo.entity.FileDeletionEvent;
+import com.richard.demo.entity.PushEvent;
 import com.richard.demo.entity.User;
 import com.richard.demo.entity.UserRegisterEvent;
 import com.richard.demo.util.CompactAlgorithm;
@@ -48,6 +52,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
 
     /**
      * @see com.richard.demo.service.UserService#addUser(com.richard.demo.entity.User)
@@ -152,8 +160,18 @@ public class UserServiceImpl implements UserService {
         return new FileSystemResource(outFile.getPath());
     }
 
+    @Override
+    public void eventListener() {
+        String msg = "测试数据";
+        log.info("发布信息：{}, thread numer is {}", msg, Thread.currentThread().getId());
+        ApplicationEvent event = new PushEvent(this, msg);
+        applicationContext.publishEvent(event);
+    }
+
     @Async
-    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
+    // @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT, fallbackExecution = true)
+    // 如果没有事务的话 ，推荐使用event listener 来实现异步
+    @EventListener
     public void onFileDeletionEvent(FileDeletionEvent event) {
         try {
             // to prevent file deletion before return
