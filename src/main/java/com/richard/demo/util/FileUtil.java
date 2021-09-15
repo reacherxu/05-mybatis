@@ -1,5 +1,6 @@
 package com.richard.demo.util;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,11 +8,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -152,10 +157,82 @@ public class FileUtil {
         return new FileSystemResource(outFile.getPath());
     }
 
+    /**
+     * 将Resource 写回磁盘，进行解压缩
+     * 
+     * @param srResource
+     * @return
+     */
+    public static String decompression(Resource srResource) {
+        String dateStr = new Date().toString();
+        String tempSrZipFileName = FileUtil.getTempLoaction() + "SR_" + dateStr + ".zip";
+        String tempSrFolder = FileUtil.getTempLoaction() + "SR_" + dateStr;
+        try {
+            // 输出文件到磁盘，检查文件数据内容及结构，方便测试。
+            OutputStream os = null;
+            InputStream in = null;
+            os = new FileOutputStream(tempSrZipFileName);
+
+            // 如果restful返回的resource，可能需要转成ByteArrayResource
+            // byte[] bytes = ((ByteArrayResource) srResource).getByteArray();
+            // in = new ByteArrayInputStream(bytes);
+            in = srResource.getInputStream();
+            byte[] bs = new byte[1024];
+            int len = 0;
+            while ((len = in.read(bs)) != -1) {
+                os.write(bs, 0, len);
+                os.flush();
+            }
+            in.close();
+            os.close();
+            FileUtil.decompression(tempSrZipFileName, tempSrFolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return tempSrFolder;
+    }
+
+    public static void decompression(String targetFileName, String parent) {
+        System.out.println("正在解压...");
+        try {
+            // 1.构建解压输出流
+            ZipInputStream zIn = new ZipInputStream(new FileInputStream(targetFileName));
+            ZipEntry entry = null;
+            File file = null;
+            // 2.循环取值 有下一级 且为文件不是目录
+            while ((entry = zIn.getNextEntry()) != null && !entry.isDirectory()) {
+                file = new File(parent, entry.getName()); // 父目录+当前条目名字
+                // 如果文件不存在
+                if (!file.exists()) {
+                    new File(file.getParent()).mkdirs();// 创建此文件的上级目录
+                }
+                // 3.写文件
+                OutputStream out = new FileOutputStream(file);
+                BufferedOutputStream bos = new BufferedOutputStream(out);
+                byte[] bytes = new byte[1024];
+                int len = -1;
+                while ((len = zIn.read(bytes)) != -1) {
+                    bos.write(bytes, 0, len);
+                }
+                bos.close();
+                System.out.println(file.getAbsolutePath() + "解压成功！");
+            }
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+
+    }
+
     public static void main(String[] args) {
         Resource file = test1();
         log.info(file.getFilename());
-
+        String tempFolder = decompression(file);
+        log.info(tempFolder);
+        FileUtils.deleteQuietly(new File(tempFolder));
+        FileUtils.deleteQuietly(new File(tempFolder + ".zip"));
     }
 
 
@@ -210,25 +287,26 @@ public class FileUtil {
 
 
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    static class Car {
+
+        private String color;
+        private String type;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    static class Object1 {
+        private String number;
+        private String result;
+    }
 }
 
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-class Car {
 
-    private String color;
-    private String type;
-}
-
-
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-class Object1 {
-    private String number;
-    private String result;
-}
