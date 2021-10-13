@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
@@ -215,18 +217,27 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
+     * 
+     * Cacheable常用的三个参数如下：
+     * cacheNames 缓存名称
+     * key 缓存的key，需要注意key的写法哈
+     * condition 缓存执行的条件，返回true时候执行
+     * 
      * @see com.richard.demo.service.UserService#findUserById(java.lang.Integer)
      */
     @Override
+    @Cacheable(cacheNames = "cache_user", key = "'user_' + #id")
     public User findUserById(Integer id) {
         return userMapper.findUserById(id);
     }
 
     /**
+     * CacheEvict 标记在方法上，方法执行完毕之后根据条件或key删除对应的缓存
      * 
      * @param user
      */
     @Override
+    @CacheEvict(cacheNames = "cache_user", key = "'user_' + #user.id")
     public void updateUser(User user) {
         userMapper.updateUser(user);
     }

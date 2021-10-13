@@ -4,6 +4,8 @@
  */
 package com.richard.demo.entity;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.NotBlank;
 
 import lombok.Data;
@@ -14,7 +16,7 @@ import lombok.Data;
  * @version $Id: User.java, v 0.1 May 31, 2020 5:00:38 PM richard.xu Exp $
  */
 @Data
-public class User {
+public class User implements Serializable {
 
     private Integer id;
     @NotBlank
