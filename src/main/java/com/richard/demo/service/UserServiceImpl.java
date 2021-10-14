@@ -226,7 +226,7 @@ public class UserServiceImpl implements UserService {
      * @see com.richard.demo.service.UserService#findUserById(java.lang.Integer)
      */
     @Override
-    @Cacheable(cacheNames = "cache_user", key = "'user_' + #id")
+    @Cacheable(value = "cache_user", keyGenerator = "userKeyGen", unless = "#result == null")
     public User findUserById(Integer id) {
         return userMapper.findUserById(id);
     }
