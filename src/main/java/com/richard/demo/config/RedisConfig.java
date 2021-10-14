@@ -12,6 +12,7 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
@@ -62,7 +63,7 @@ public class RedisConfig {
 
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("cache_user", getRedisCacheConfigurationWithTtl(60));
+        cacheConfigurations.put("cache_user", getRedisCacheConfigurationWithTtl(10));
         return cacheConfigurations;
     }
 
@@ -87,5 +88,13 @@ public class RedisConfig {
                 .entryTtl(Duration.ofSeconds(seconds));
 
         return redisCacheConfiguration;
+    }
+
+    @Bean
+    public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        // 监听所有库的key过期事件
+        container.setConnectionFactory(connectionFactory);
+        return container;
     }
 }

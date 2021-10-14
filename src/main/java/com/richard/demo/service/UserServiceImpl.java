@@ -36,6 +36,7 @@ import com.richard.demo.entity.User;
 import com.richard.demo.entity.UserRegisterEvent;
 import com.richard.demo.util.CompactAlgorithm;
 import com.richard.demo.util.FileUtil;
+import com.richard.demo.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,6 +59,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ApplicationContext applicationContext;
 
+
+    @Autowired
+    private RedisUtil redisUtil;
 
     /**
      * @see com.richard.demo.service.UserService#addUser(com.richard.demo.entity.User)
@@ -228,6 +232,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Cacheable(value = "cache_user", keyGenerator = "userKeyGen", unless = "#result == null")
     public User findUserById(Integer id) {
+        redisUtil.set("backup_cache_user::keyGen1_" + id, "file" + id);
         return userMapper.findUserById(id);
     }
 

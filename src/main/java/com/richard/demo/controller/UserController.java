@@ -26,6 +26,7 @@ import com.richard.demo.dao.UserMapper;
 import com.richard.demo.dto.PairDto;
 import com.richard.demo.entity.User;
 import com.richard.demo.service.UserService;
+import com.richard.demo.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -180,6 +181,18 @@ public class UserController {
     public String updateUser1(@RequestBody User user) {
         userService.updateUser(user);
         return "ok";
+    }
+
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+    @RequestMapping(value = "/findUserByIdCache", method = RequestMethod.GET)
+    @ResponseBody
+    public User getCache(Integer id) {
+
+        User user = (User) redisUtil.get("cache_user::keyGen1_" + id);
+        return user;
     }
 
 }
