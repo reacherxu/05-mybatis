@@ -63,7 +63,8 @@ public class RedisConfig {
 
     private Map<String, RedisCacheConfiguration> getRedisCacheConfigurationMap() {
         Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-        cacheConfigurations.put("cache_user", getRedisCacheConfigurationWithTtl(10));
+        // 10 mins
+        cacheConfigurations.put("cache_user", getRedisCacheConfigurationWithTtl(10 * 60));
         return cacheConfigurations;
     }
 
