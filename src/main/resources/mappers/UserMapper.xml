@@ -23,4 +23,9 @@
 	<update id="updateUser" parameterType="com.richard.demo.entity.User">
 		update users set name=#{name}, age=#{age} where id=#{id}
 	</update>
+
+	<delete id="deleteUser" flushCache="true" statementType="PREPARED" timeout="20">
+		delete from users where id = #{id}
+	</delete>
+
 </mapper>

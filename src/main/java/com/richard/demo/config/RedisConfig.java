@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +13,12 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -53,6 +56,12 @@ public class RedisConfig {
         return template;
     }
 
+    /**
+     * 设置缓存的过期时间
+     * 
+     * @param cf
+     * @return
+     */
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory cf) {
         Map<String, RedisCacheConfiguration> cacheConfigurations = getRedisCacheConfigurationMap();
@@ -91,11 +100,26 @@ public class RedisConfig {
         return redisCacheConfiguration;
     }
 
+    // 监听所有库的key过期事件
     @Bean
     public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory connectionFactory) {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        // 监听所有库的key过期事件
         container.setConnectionFactory(connectionFactory);
         return container;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public StringRedisTemplate stringRedisTemplate(RedisConnectionFactory rcf) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        RedisSerializer<?> serializer = new StringRedisSerializer();
+        StringRedisTemplate redisTemplate = new StringRedisTemplate();
+        redisTemplate.setConnectionFactory(rcf);
+        redisTemplate.setKeySerializer(keySerializer);
+        redisTemplate.setHashKeySerializer(keySerializer);
+        redisTemplate.setValueSerializer(serializer);
+        redisTemplate.setHashValueSerializer(serializer);
+        redisTemplate.afterPropertiesSet();
+        return redisTemplate;
     }
 }

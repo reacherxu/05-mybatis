@@ -184,6 +184,13 @@ public class UserController {
     }
 
 
+    @RequestMapping(value = "/updateUserInCache", method = RequestMethod.PUT)
+    @ResponseBody
+    public String updateUserInCache(@RequestBody User user) {
+        userService.updateUserInCache(user.getId(), user);
+        return "ok";
+    }
+
     @Autowired
     private RedisUtil redisUtil;
 
@@ -193,6 +200,12 @@ public class UserController {
 
         User user = (User) redisUtil.get("cache_user::keyGen1_" + id);
         return user;
+    }
+
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void delete(Integer id) {
+        userService.deleteUser(id);
     }
 
 }

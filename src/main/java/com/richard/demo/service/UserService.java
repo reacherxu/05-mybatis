@@ -43,4 +43,9 @@ public interface UserService {
     User findUserById(Integer id);
 
     void updateUser(User user);
+
+    User updateUserInCache(Integer id, User user);
+
+    void deleteUser(Integer id);
+
 }
