@@ -4,6 +4,7 @@
  */
 package com.richard.demo.service;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -47,5 +48,9 @@ public interface UserService {
     User updateUserInCache(Integer id, User user);
 
     void deleteUser(Integer id);
+
+    String getCacheByKey(String cacheName, String key, String type) throws ClassNotFoundException;
+
+    Collection<String> getAllCacheKeys(String cacheName);
 
 }

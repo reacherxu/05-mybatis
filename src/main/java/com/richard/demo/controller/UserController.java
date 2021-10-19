@@ -5,6 +5,7 @@
 package com.richard.demo.controller;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -26,6 +27,7 @@ import com.richard.demo.dao.UserMapper;
 import com.richard.demo.dto.PairDto;
 import com.richard.demo.entity.User;
 import com.richard.demo.service.UserService;
+import com.richard.demo.util.RedisCacheManager;
 import com.richard.demo.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -191,6 +193,7 @@ public class UserController {
         return "ok";
     }
 
+    // redis 操作方法1 通过template
     @Autowired
     private RedisUtil redisUtil;
 
@@ -206,6 +209,55 @@ public class UserController {
     @ResponseBody
     public void delete(Integer id) {
         userService.deleteUser(id);
+    }
+
+
+    // redis 操作方法2 通过cacheManager
+    @Autowired
+    private RedisCacheManager redisCacheManager;
+
+    /**
+     * 往cache 中塞value
+     * 
+     * @param cacheName
+     * @param key
+     * @param value
+     * @return
+     */
+    @RequestMapping(value = "/putCache", method = RequestMethod.POST)
+    @ResponseBody
+    public String putCache(@RequestParam String cacheName, @RequestParam String key, @RequestParam String value) {
+        redisCacheManager.put(cacheName, key, value);
+        return "ok";
+    }
+
+
+    /**
+     * 从cache 中根据type key 找value
+     * 
+     * @param cacheName
+     * @param key
+     * @param type
+     * @return
+     * @throws ClassNotFoundException
+     */
+    @RequestMapping(value = "/findCache", method = RequestMethod.GET)
+    @ResponseBody
+    public String findCache(@RequestParam String cacheName, @RequestParam String key, @RequestParam String type)
+            throws ClassNotFoundException {
+        return userService.getCacheByKey(cacheName, key, type);
+    }
+
+    /**
+     * 根据cache 名字 匹配所有的cache key
+     * 
+     * @param cacheName
+     * @return
+     */
+    @RequestMapping(value = "/findAllCache", method = RequestMethod.GET)
+    @ResponseBody
+    public Collection<String> findAllCache(@RequestParam String cacheName) {
+        return userService.getAllCacheKeys(cacheName);
     }
 
 }

@@ -6,11 +6,13 @@ package com.richard.demo.service;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,6 +22,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,7 @@ import com.richard.demo.entity.User;
 import com.richard.demo.entity.UserRegisterEvent;
 import com.richard.demo.util.CompactAlgorithm;
 import com.richard.demo.util.FileUtil;
+import com.richard.demo.util.RedisCacheManager;
 import com.richard.demo.util.RedisUtil;
 
 import lombok.extern.slf4j.Slf4j;
@@ -231,7 +235,8 @@ public class UserServiceImpl implements UserService {
      * @see com.richard.demo.service.UserService#findUserById(java.lang.Integer)
      */
     @Override
-    @Cacheable(value = "cache_user", keyGenerator = "userKeyGen", unless = "#result == null")
+
+    @Cacheable(value = {"cache_user", "cache_user_2"}, keyGenerator = "userKeyGen", unless = "#result == null")
     public User findUserById(Integer id) {
         redisUtil.set("backup_cache_user::keyGen1_" + id, "file" + id);
         return userMapper.findUserById(id);
@@ -259,6 +264,35 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(cacheNames = "cache_user", keyGenerator = "userKeyGen")
     public void deleteUser(Integer id) {
         userMapper.deleteUser(id);
+    }
+
+
+    @Autowired
+    private RedisCacheManager redisCacheManager;
+
+    @Override
+    public String getCacheByKey(String cacheName, String key, String type) throws ClassNotFoundException {
+        Cache cache = redisCacheManager.getCache(cacheName);
+        return cache.get(key, Class.forName(type).getDeclaringClass()).toString();
+    }
+
+
+    @Autowired
+    private RedisTemplate redisTemplate;
+
+    @Override
+    public Collection<String> getAllCacheKeys(String cacheName) {
+        Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
+        return cacheKeys;
+    }
+
+
+    public String getCacheKey(String cacheMethodName, String... params) {
+        StringBuilder cacheKey = new StringBuilder();
+        log.info("[RedisCacheManager#getCacheKey] Cache key: {}.", cacheKey.toString());
+        cacheKey.append("keyGen1");
+        cacheKey.append("_").append(params[0]);
+        return cacheKey.toString();
     }
 
 }
