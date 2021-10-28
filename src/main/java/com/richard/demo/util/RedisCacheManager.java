@@ -1,44 +1,81 @@
 package com.richard.demo.util;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class RedisCacheManager {
     private final CacheManager cacheManager;
+    private final RedisTemplate redisTemplate;
 
-    public RedisCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+    public Collection<String> getAllCacheKeys(String cacheName) {
+        Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
+        return cacheKeys;
+    }
+
+    /**
+     * 指定缓存失效时间
+     *
+     * @param key 键
+     * @param time 时间(秒)
+     * @return
+     */
+    public boolean expire(String key, long time) {
+        try {
+            if (time > 0) {
+                redisTemplate.expire(key, time, TimeUnit.SECONDS);
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 根据key 获取过期时间
+     *
+     * @param key 键 不能为null
+     * @return 时间(秒) 返回0代表为永久有效
+     */
+    public long getExpire(String key) {
+        return redisTemplate.getExpire(key, TimeUnit.SECONDS);
     }
 
     public Collection<String> getCacheNames() {
         return cacheManager.getCacheNames();
     }
 
-    public Map<String, Object> ObjToMap(Object obj) throws Exception {
-        Map<String, Object> map = new HashMap<>();
-        Field[] fields = obj.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            map.put(field.getName(), field.get(obj));
-        }
-        return map;
-    }
-
     public void clearCache(String cacheName, String key) {
         Cache cache = this.getCache(cacheName);
         if (null != cache) {
             cache.evict(key);
+        }
+    }
+
+    /**
+     * 判断key是否存在
+     *
+     * @param key 键
+     * @return true 存在 false不存在
+     */
+    public boolean hasKey(String key) {
+        try {
+            return redisTemplate.hasKey(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 

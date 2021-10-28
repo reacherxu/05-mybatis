@@ -257,7 +257,16 @@ public class UserController {
     @RequestMapping(value = "/findAllCache", method = RequestMethod.GET)
     @ResponseBody
     public Collection<String> findAllCache(@RequestParam String cacheName) {
-        return userService.getAllCacheKeys(cacheName);
+        return redisCacheManager.getAllCacheKeys(cacheName);
     }
+
+    @RequestMapping(value = "/getTtl", method = RequestMethod.GET)
+    @ResponseBody
+    public boolean getTtl(@RequestParam String key) {
+        long ttl = redisCacheManager.getExpire(key);
+        log.info("will expire in {} s", ttl);
+        return (ttl < 60 && ttl >= 0) || ttl == -2;
+    }
+
 
 }

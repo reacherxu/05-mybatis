@@ -6,7 +6,6 @@ package com.richard.demo.service;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
@@ -274,25 +272,6 @@ public class UserServiceImpl implements UserService {
     public String getCacheByKey(String cacheName, String key, String type) throws ClassNotFoundException {
         Cache cache = redisCacheManager.getCache(cacheName);
         return cache.get(key, Class.forName(type).getDeclaringClass()).toString();
-    }
-
-
-    @Autowired
-    private RedisTemplate redisTemplate;
-
-    @Override
-    public Collection<String> getAllCacheKeys(String cacheName) {
-        Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
-        return cacheKeys;
-    }
-
-
-    public String getCacheKey(String cacheMethodName, String... params) {
-        StringBuilder cacheKey = new StringBuilder();
-        log.info("[RedisCacheManager#getCacheKey] Cache key: {}.", cacheKey.toString());
-        cacheKey.append("keyGen1");
-        cacheKey.append("_").append(params[0]);
-        return cacheKey.toString();
     }
 
 }
