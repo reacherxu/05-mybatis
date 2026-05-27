@@ -41,8 +41,8 @@ public class DynamicScheduleConfigurer implements SchedulingConfigurer {
                     if (StringUtils.isEmpty(cron)) {
                         log.warn("cron is empty");
                     }
-                    // 2.3 返回执行周期(Date)
-                    return new CronTrigger(cron).nextExecutionTime(triggerContext);
+                    // 2.3 返回执行周期(Instant)
+                    return new CronTrigger(cron).nextExecution(triggerContext);
                 });
 
     }

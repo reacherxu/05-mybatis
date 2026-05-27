@@ -17,7 +17,6 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Test;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ResourceUtils;
@@ -272,7 +271,6 @@ public class FileUtil {
         return mapping.toString();
     }
 
-    @Test
     public void test() throws Exception {
         // 表示classpath的路径，就是bin的绝对路径名
         System.out.println(FileUtil.class.getResource("/"));
